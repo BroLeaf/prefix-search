@@ -61,6 +61,33 @@ int main(int argc, char **argv)
     t2 = tvgetf();
 
     fclose(fp);
+    /* use --bench argement */
+    if (!strncmp(argv[1], "--bench", 7)) {
+        int count = 0;
+        fp = fopen("testdata.txt", "r");
+        FILE *fp2 = fopen("test_cpy_output.txt", "w");
+
+        if (fp2 == NULL) {
+            fclose(fp);
+            fprintf(stderr, "error: fi;e open failed '%s'.\n", argv[1]);
+            return 1;
+        }
+
+        while(fscanf(fp, "%s",word) != EOF) {
+            t1 = tvgetf();
+            tst_search_prefix(root, word, sgl, &sidx, LMAX);
+            t2 = tvgetf();
+
+            fprintf(fp2, "%d %.6f\n", ++count, t2 - t1);
+            printf("%d %.6f\n", count, t2 - t1);
+        }
+        fclose(fp);
+        fclose(fp2);
+
+        return 0;
+    }
+
+    /* run without argument */
     printf("ternary_tree, loaded %d words in %.6f sec\n", idx, t2 - t1);
 
     for (;;) {
