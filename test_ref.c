@@ -32,7 +32,7 @@ static void rmcrlf(char *s)
         s[--len] = 0;
 }
 
-#define IN_FILE "cities.txt"
+#define IN_FILE "cities20000.txt"
 
 int main(int argc, char **argv)
 {
@@ -49,10 +49,13 @@ int main(int argc, char **argv)
     }
 
     t1 = tvgetf();
-    while ((rtn = fscanf(fp, "%s", word)) != EOF) {
-        char *p = word;
+    int cnt = 0;
+    char word2[20000][WRDMAX];
+    while ((rtn = fscanf(fp, "%s", word2[cnt])) != EOF) {
+        //char *p = word;
+        char *p = word2[cnt++];
         /* FIXME: insert reference to each string */
-        if (!tst_ins_del(&root, &p, INS, CPY)) {
+        if (!tst_ins_del(&root, &p, INS, REF)) {
             fprintf(stderr, "error: memory exhausted, tst_insert.\n");
             fclose(fp);
             return 1;
@@ -64,7 +67,7 @@ int main(int argc, char **argv)
     fclose(fp);
 
     /* use --bench argement */
-    if (!strncmp(argv[1], "--bench", 7)) {
+    if (argc > 2 && !strncmp(argv[1], "--bench", 7)) {
         int count = 0;
         fp = fopen("testdata.txt", "r");
 
@@ -177,7 +180,7 @@ int main(int argc, char **argv)
             }
             break;
         case 'q':
-            tst_free_all(root);
+            tst_free(root);
             return 0;
             break;
         default:

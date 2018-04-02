@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 
     fclose(fp);
     /* use --bench argement */
-    if (!strncmp(argv[1], "--bench", 7)) {
+    if (argc > 2 && !strncmp(argv[1], "--bench", 7)) {
         int count = 0;
         fp = fopen("testdata.txt", "r");
         FILE *fp2 = fopen("test_cpy_output.txt", "w");
